@@ -3,8 +3,12 @@ import os
 import time
 import random
 
-#Load images
+WIDTH, HEIGHT = 750,750
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Space Invader Twist")
 
+#Load images
+#Enemy Ships
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_green_small.png"))
 BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue_small.png"))
@@ -20,3 +24,21 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 
 #Background
 BG = pygame.image.load(os.path.join("assets", "background-black.png"))
+
+def main():
+    run = True
+    FPS = 60
+    clock = pygame.time.Clock()
+
+    while run:
+        #Tick the clock based on FPS. Allows consistency on multiple devices.
+        clock.tick(FPS)
+
+        #Everytime we run the loop (60 times each second) loop through all events and
+        #Check if an event occurs. If so do something.
+        for event in pygame.event.get():
+            #If you click the X in the pygame window run equals False
+            if event.type == pygame.QUIT:
+                run = False
+
+main()
