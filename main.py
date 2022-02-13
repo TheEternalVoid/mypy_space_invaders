@@ -1,3 +1,4 @@
+from turtle import color
 import pygame
 import os
 import time
@@ -57,6 +58,22 @@ class Player(Ship):
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
 
+class Enemy(Ship):
+    #Used for when color strings are passed to define mapping for ship and laser colors 
+    COLOR_MAP = {
+                "red": (RED_SPACE_SHIP, RED_LASER),
+                "green": (GREEN_SPACE_SHIP, GREEN_LASER),
+                "blue": (BLUE_SPACE_SHIP, BLUE_LASER)
+                }
+    
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img, self.laser_img = self.COLOR_MAP[color]
+        self.mask = pygame.mask.from_surface(self.ship_img)
+
+    def move(self, vel):
+        self.y += vel
+
 
 
 def main():
@@ -107,13 +124,13 @@ def main():
         #Checks based on fps what keys are pressed and returns bool values with True if they are pressed
         keys = pygame.key.get_pressed()
         #If statement for the key at this index (.K represents keyboard input and _value equals which key)
-        if keys[pygame.K_a] and player.x - player_vel > 0: #left
+        if keys[pygame.K_a] and player.x - player_vel > 0: #Left
             player.x -= player_vel
-        if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH: #right
+        if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH: #Right
             player.x += player_vel
-        if keys[pygame.K_w] and player.y - player_vel > 0: #up
+        if keys[pygame.K_w] and player.y - player_vel > 0: #Up
             player.y -= player_vel
-        if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT: #down
+        if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT: #Down
             player.y += player_vel
 
 main()
