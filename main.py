@@ -79,9 +79,13 @@ class Enemy(Ship):
 def main():
     run = True
     FPS = 60
-    level = 1
+    level = 0
     lives = 5
     main_font = pygame.font.SysFont("comicsans", 50)
+
+    enemies = []
+    wave_length = 5
+    enemy_vel = 1
     
     #Ship velocity
     player_vel = 5
@@ -103,6 +107,10 @@ def main():
         WIN.blit(lives_label, (10,10))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
+
+        for enemy in enemies:
+            enemy.draw(WIN)
+        
         #Method used to draw instance of player to window
         player.draw(WIN)
 
@@ -112,7 +120,16 @@ def main():
     while run:
         #Tick the clock based on FPS. Allows consistency on multiple devices.
         clock.tick(FPS)
-        redraw_window()
+
+        if len(enemies) == 0:
+            level += 1
+            wave_length += 5
+            for i in range(wave_length):
+                #Initialize enemy with X and Y with a color as well.
+                #X position min and max values set to keep in window while being random
+                #Y position is random range outside of screen to give illusion of enemies coming at different times.
+                enemy = Enemy(random.randrange(50, WIDTH - 100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemies.append(enemy)
 
         #Everytime we run the loop (60 times each second) loop through all events and
         #Check if an event occurs. If so do something.
@@ -132,5 +149,11 @@ def main():
             player.y -= player_vel
         if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT: #Down
             player.y += player_vel
+
+        #For each enemy use move method to bring enemy down screen
+        for enemy in enemies:
+            enemy.move(enemy_vel)
+
+        redraw_window()
 
 main()
