@@ -1,4 +1,3 @@
-from turtle import color
 import pygame
 import os
 import time
@@ -127,7 +126,7 @@ def main():
             for i in range(wave_length):
                 #Initialize enemy with X and Y with a color as well.
                 #X position min and max values set to keep in window while being random
-                #Y position is random range outside of screen to give illusion of enemies coming at different times.
+                #Y position is random range outside of screen to give illusion of enemies coming at 
                 enemy = Enemy(random.randrange(50, WIDTH - 100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
 
