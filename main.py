@@ -150,8 +150,11 @@ def main():
             player.y += player_vel
 
         #For each enemy use move method to bring enemy down screen
-        for enemy in enemies:
+        for enemy in enemies[:]:
             enemy.move(enemy_vel)
+            if enemy.y + enemy.get_height() > HEIGHT:
+                lives -= 1
+                enemies.remove(enemy)
 
         redraw_window()
 
