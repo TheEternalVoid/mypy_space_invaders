@@ -28,6 +28,25 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 #Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
+class Laser:
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.mask = pygame.mask.from_surface(self.img)
+
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
+    
+    def move(self, vel):
+        self.y += vel
+    
+    def off_screen(self, height):
+        return self.y <= height and self.y >= 0
+
+    def collision(self, obj):
+        return collide(self, obj)
+
 #Generic Ship class to be inherited by both player and enemy ships
 class Ship:
     def __init__(self, x, y, health=100):
@@ -73,7 +92,10 @@ class Enemy(Ship):
     def move(self, vel):
         self.y += vel
 
-
+def collide(obj1, obj2):
+    offset_x = obj2.x - obj1.x
+    offset_y = obj2.y - obj1.y
+    return obj1.mask.overlap(obj2, (offset_x, offset_y)) != None
 
 def main():
     run = True
