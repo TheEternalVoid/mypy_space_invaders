@@ -28,6 +28,19 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 #Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
+class Powerup:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.img = YELLOW_LASER
+        self.mask = pygame.mask.from_surface(self.img)
+
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
+
+    def collision(self, obj):
+        return collide(self, obj)
+
 class Laser:
     def __init__(self, x, y, img):
         self.x = x
@@ -162,6 +175,7 @@ def main():
     lost_font = pygame.font.SysFont("comicsans", 60)
 
     enemies = []
+    powerups = []
     wave_length = 5
     enemy_vel = 1
     
@@ -172,6 +186,7 @@ def main():
 
     #Instanciated instance of Ship class
     player = Player(300, 630)
+    test_powerup = Powerup(350, 400)
 
     clock = pygame.time.Clock()
 
@@ -193,6 +208,9 @@ def main():
 
         for enemy in enemies:
             enemy.draw(WIN)
+        
+        for powerup in powerups:
+            powerup.draw(WIN)
         
         #Method used to draw instance of player to window
         player.draw(WIN)
@@ -267,7 +285,9 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
 
-
+        if collide(test_powerup, player):
+            player.COOLDOWN = 15
+            powerups.remove(test_powerup)
 
         player.move_lasers(-laser_vel, enemies)
 
