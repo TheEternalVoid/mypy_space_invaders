@@ -181,18 +181,18 @@ def main():
     
     #Ship velocity
     player_vel = 5
-
+    
     laser_vel = 5
 
     #Instanciated instance of Ship class
     player = Player(300, 630)
-    test_powerup = Powerup(350, 400)
 
     clock = pygame.time.Clock()
 
     lost = False
     lost_count = 0
 
+    
     def redraw_window():
         #Draw background to window
         WIN.blit(BG, (0,0))
@@ -241,12 +241,18 @@ def main():
         if len(enemies) == 0:
             level += 1
             wave_length += 5
+            player.COOLDOWN = 30
             for i in range(wave_length):
                 #Initialize enemy with X and Y with a color as well.
                 #X position min and max values set to keep in window while being random
                 #Y position is random range outside of screen to give illusion of enemies coming at 
                 enemy = Enemy(random.randrange(50, WIDTH - 100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
+
+        if len(powerups) == 0 and player.COOLDOWN != 15:
+            powerup = Powerup(random.randrange(0,500), random.randrange(0,500))
+            powerups.append(powerup)
+
 
         #Everytime we run the loop (60 times each second) loop through all events and
         #Check if an event occurs. If so do something.
@@ -269,6 +275,8 @@ def main():
         if keys[pygame.K_SPACE]:
             player.shoot()
 
+
+
         #For each enemy use move method to bring enemy down screen
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
@@ -285,9 +293,11 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
 
-        if collide(test_powerup, player):
-            player.COOLDOWN = 15
-            powerups.remove(test_powerup)
+        
+        for powerup in powerups[:]:
+            if collide(powerup, player):
+                player.COOLDOWN = 15
+                powerups.remove(powerup)
 
         player.move_lasers(-laser_vel, enemies)
 
